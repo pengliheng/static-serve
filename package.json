@@ -1,14 +1,29 @@
 {
-  "name": "nginx",
-  "version": "1.0.0",
-  "main": "hs.js",
-  "license": "MIT",
-  "dependencies": {
-    "http-server": "^14.0.0",
-    "md5": "^2.3.0",
-    "mime": "^3.0.0"
-  },
-  "scripts": {
-    "hs": "npx which http-server"
-  }
+    "name": "@pengliheng/static-server",
+    "version": "1.0.3",
+    "main": "hs.js",
+    "license": "MIT",
+    "bin": {
+        "hs": "bin/phs.js"
+    },
+    "dependencies": {
+        "@pengliheng/static-server": "^1.0.2",
+        "http-server": "^14.0.0",
+        "md5": "^2.3.0",
+        "mime": "^3.0.0"
+    },
+    "scripts": {
+        "hs": "npx which http-server"
+    },
+    "devDependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pengliheng/static-serve.git"
+    },
+    "author": "",
+    "bugs": {
+        "url": "https://github.com/pengliheng/static-serve/issues"
+    },
+    "homepage": "https://github.com/pengliheng/static-serve#readme",
+    "description": "static serve"
 }
