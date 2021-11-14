@@ -1,19 +1,18 @@
 {
     "name": "@pengliheng/static-server",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "main": "hs.js",
     "license": "MIT",
-    "bin": "bin/phs",
+    "bin": "bin/phs.js",
     "dependencies": {
+        "@pengliheng/static-server": "^1.0.9",
         "md5": "^2.3.0",
         "mime": "^3.0.0"
     },
     "scripts": {
         "p": "yarn publish --access public"
     },
-    "devDependencies": {
-        "@pengliheng/static-server": "^1.0.3"
-    },
+    "devDependencies": {},
     "repository": {
         "type": "git",
         "url": "git+https://github.com/pengliheng/static-serve.git"
