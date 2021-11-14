@@ -11,7 +11,7 @@ const staticPath = process.argv[2];
 const server = http.createServer(async (req, res) => {
     var urlObj = url.parse(req.url);
     var urlPathname = urlObj.pathname;
-    var filePathname = path.join(__dirname, staticPath, urlPathname);
+    var filePathname = path.join(staticPath, urlPathname);
     filePathname = decodeURIComponent(filePathname);
     // 解析后对象的 ext 属性中保存着目标文件的后缀名
     var ext = path.parse(urlPathname).ext;
@@ -25,7 +25,7 @@ const server = http.createServer(async (req, res) => {
         const mtime = stat.mtime.toGMTString(); // 文件的最后修改时间
         const noneMatch = req.headers["if-none-match"]; // 来自浏览器端传递的值
         const requestMtime = req.headers["if-modified-since"]; // 来自浏览器传递的值
-        if (mimeType.indexOf("image") > -1) {
+        if (mimeType && mimeType.indexOf("image") > -1) {
             res.writeHead(200, {
                 "Cache-Control": "max-age=31536000", // 修改地方
                 "Content-Type": `${mimeType}; charset=utf-8`,
