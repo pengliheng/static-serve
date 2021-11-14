@@ -3,9 +3,11 @@
     "version": "1.1.2",
     "main": "hs.js",
     "license": "MIT",
-    "bin": "bin/hs",
+    "bin": {
+        "hs": "./bin/hs",
+        "http-serve": "./bin/hs"
+    },
     "dependencies": {
-        "@pengliheng/static-server": "^1.1.1",
         "md5": "^2.3.0",
         "mime": "^3.0.0"
     },
