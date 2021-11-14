@@ -1,12 +1,9 @@
 {
     "name": "@pengliheng/static-server",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "main": "hs.js",
     "license": "MIT",
-    "bin": {
-        "asdf": "bin/phs",
-        "hs": "bin/phs"
-    },
+    "bin": "bin/phs",
     "dependencies": {
         "md5": "^2.3.0",
         "mime": "^3.0.0"
