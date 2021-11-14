@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+    nginx:
+        restart: always
+        build:
+            context: "./nginx"
+        volumes:
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./nginx:/var/log/nginx/
+            - ./nginx/public:/tmp/nginx_cache/
+        ports:
+            - "8989:80"

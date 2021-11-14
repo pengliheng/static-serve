@@ -1,0 +1,14 @@
+{
+  "name": "nginx",
+  "version": "1.0.0",
+  "main": "hs.js",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^14.0.0",
+    "md5": "^2.3.0",
+    "mime": "^3.0.0"
+  },
+  "scripts": {
+    "hs": "npx which http-server"
+  }
+}
