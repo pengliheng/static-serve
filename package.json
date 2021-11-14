@@ -1,13 +1,11 @@
 {
     "name": "@pengliheng/static-server",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "main": "hs.js",
     "license": "MIT",
-    "bin": {
-        "hs": ".bin/hs.js"
-    },
+    "bin": "bin/hs",
     "dependencies": {
-        "@pengliheng/static-server": "/Users/pengliheng/work/nginx",
+        "@pengliheng/static-server": "^1.1.1",
         "md5": "^2.3.0",
         "mime": "^3.0.0"
     },
