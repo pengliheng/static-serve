@@ -6,6 +6,8 @@ const mime = require("mime");
 const md5 = require("md5");
 const { networkInterfaces } = require("os");
 
+const port = 8989;
+const currentIp = networkInterfaces().en0.find((e) => e.family === "IPv4");
 const staticPath = process.argv[2];
 
 const server = http.createServer(async (req, res) => {
@@ -18,14 +20,42 @@ const server = http.createServer(async (req, res) => {
     // 获取后缀对应的 MIME 类型
     var mimeType = mime.getType(ext);
     const readFileResponse = await readFile(filePathname);
+    const fileStat = await getFileStat(filePathname);
+    const stat = fileStat.data;
     if (readFileResponse.isSuc) {
-        console.log("it is file");
+        const fileSize = stat.size;
+        if (fileSize > 1000 * 1000 * 5) {
+            const range = req.headers.range;
+            if (range) {
+                const parts = range.replace(/bytes=/, "").split("-");
+                const start = parseInt(parts[0], 10);
+                const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+                const chunksize = end - start + 1;
+                const file = fs.createReadStream(filePathname, { start, end });
+                const head = {
+                    "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+                    "Accept-Ranges": "bytes",
+                    "Content-Length": chunksize,
+                    "Content-Type": `${mimeType}; charset=utf-8`,
+                };
+                res.writeHead(206, head);
+                file.pipe(res);
+            } else {
+                const head = {
+                    "Content-Length": fileSize,
+                    "Content-Type": `${mimeType}; charset=utf-8`,
+                };
+                res.writeHead(200, head);
+                fs.createReadStream(filePathname).pipe(res);
+            }
+            return;
+        }
         const fileMd5 = md5(readFileResponse.data); // 文件的 md5 值
-        const stat = fs.statSync(filePathname); // 获取当前脚本状态
         const mtime = stat.mtime.toGMTString(); // 文件的最后修改时间
         const noneMatch = req.headers["if-none-match"]; // 来自浏览器端传递的值
         const requestMtime = req.headers["if-modified-since"]; // 来自浏览器传递的值
         if (mimeType && mimeType.indexOf("image") > -1) {
+            // image
             res.writeHead(200, {
                 "Cache-Control": "max-age=31536000", // 修改地方
                 "Content-Type": `${mimeType}; charset=utf-8`,
@@ -54,7 +84,7 @@ const server = http.createServer(async (req, res) => {
             // "Last-Modified": Sat, 13 Nov 2021 12:54:33 GMT
             "Last-Modified": mtime,
             "Content-Type": `${mimeType}; charset=utf-8`,
-            'ETag': fileMd5,
+            ETag: fileMd5,
         });
         res.write(readFileResponse.data);
         res.end();
@@ -67,9 +97,9 @@ const server = http.createServer(async (req, res) => {
         });
         const htmlList = readDirResponse.data
             .map((file) => {
-                var filePathname = path.join(staticPath, urlPathname, file);
+                var filePathname = path.join(urlPathname, file);
                 return `<li>
-                    <a href="/${filePathname}">
+                    <a href="${filePathname}">
                         ${decodeURIComponent(file)}
                     </a>
                 </li>`;
@@ -110,6 +140,19 @@ async function readFile(filePathname) {
     });
 }
 
+function getFileStat(filePathname) {
+    return new Promise((res, rej) => {
+        fs.stat(filePathname, (err, data) => {
+            // 如果有问题返回 404
+            if (err) {
+                res({ isSuc: false });
+            } else {
+                res({ isSuc: true, data });
+            }
+        });
+    });
+}
+
 function getCurrentDate(second) {
     let res = "";
     if (second) {
@@ -119,8 +162,7 @@ function getCurrentDate(second) {
     console.log(res);
     return res;
 }
-const port = 8989;
-const currentIp = networkInterfaces().en0.find((e) => e.family === "IPv4");
+
 server.listen(port, () => {
     // listen ${port} success
     console.log(`

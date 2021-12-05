@@ -12,7 +12,8 @@
         "mime": "^3.0.0"
     },
     "scripts": {
-        "p": "yarn publish --access public"
+        "p": "yarn publish --access public",
+        "test": "nodemon hs.js ~/"
     },
     "devDependencies": {},
     "repository": {
